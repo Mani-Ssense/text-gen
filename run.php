@@ -24,8 +24,20 @@ function getKeysFromText($text, $numberOfChars = 3)
     return $table;
 }
 
+function replaceCountWithProb(&$table) 
+{
+    foreach ($table as $k => $v) {
+        $sum = array_sum($v);
+        foreach($v as $char => $charCount) {
+            $table[$k][$char] = $charCount / $sum;
+        }
+    }
+}
+
 $text = file_get_contents('shakespeare_input.txt');
-$table = getKeysFromText($text, 10);
+$table = getKeysFromText($text, 3);
+replaceCountWithProb($table);
+
 echo count($table);
 echo PHP_EOL;
 
@@ -35,7 +47,7 @@ foreach ($table as $k => $v) {
     var_dump($v);
     echo PHP_EOL;
     $c++;
-    if ($c > 2) {
+    if ($c > 0) {
         return;
     }
 }
