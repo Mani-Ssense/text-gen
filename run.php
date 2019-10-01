@@ -9,10 +9,7 @@ function getKeysFromText($text, $numberOfChars = 3)
         if (!isset($table[$subString])) {
             $table[$subString] = [];
         }
-    }
 
-    for ($i = 0; $i < (strlen($text) - $numberOfChars); $i++) {
-        $subString = substr($text, $i, $numberOfChars);
         $charCount = substr($text, $i + $numberOfChars, 1);
         if (isset($table[$subString][$charCount])) {
             $table[$subString][$charCount]++;
@@ -20,7 +17,6 @@ function getKeysFromText($text, $numberOfChars = 3)
             $table[$subString][$charCount] = 1;
         }
     }
-
     return $table;
 }
 
