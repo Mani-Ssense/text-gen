@@ -1,4 +1,18 @@
 <?php
+require "vendor/autoload.php";
+Predis\Autoloader::register();
+try {
+    $redis = new Predis\Client([
+        "scheme" => "tcp",
+        "host" => "localhost",
+        "port" => 6379
+    ]);
+    //Your code
+} catch (Exception $e) {
+    //Note: bad practice to catch general exception, but you are exiting
+    error_log('error with Redis ' . $e->getMessage());
+    exit;
+}
 
 function getKeysFromText($text, $numberOfChars = 3)
 {
@@ -20,11 +34,11 @@ function getKeysFromText($text, $numberOfChars = 3)
     return $table;
 }
 
-function replaceCountWithProb(&$table) 
+function replaceCountWithProb(&$table)
 {
     foreach ($table as $k => $v) {
         $sum = array_sum($v);
-        foreach($v as $char => $charCount) {
+        foreach ($v as $char => $charCount) {
             $table[$k][$char] = $charCount / $sum;
         }
 
@@ -33,19 +47,12 @@ function replaceCountWithProb(&$table)
 }
 
 $text = file_get_contents('shakespeare_input.txt');
-$table = getKeysFromText($text, 3);
+$table = getKeysFromText($text, 10);
 replaceCountWithProb($table);
 
 echo count($table);
 echo PHP_EOL;
 
-$c = 0;
 foreach ($table as $k => $v) {
-    var_dump($k);
-    var_dump($v);
-    echo PHP_EOL;
-    $c++;
-    if ($c > 0) {
-        return;
-    }
+    $redis->set($k, $v);
 }
