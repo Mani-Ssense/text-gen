@@ -27,6 +27,8 @@ function replaceCountWithProb(&$table)
         foreach($v as $char => $charCount) {
             $table[$k][$char] = $charCount / $sum;
         }
+
+        $table[$k] = json_encode($table[$k]);
     }
 }
 
